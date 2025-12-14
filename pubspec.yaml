@@ -1,0 +1,39 @@
+name: atomberg_fan_controller
+description: A production-ready Flutter app for controlling Atomberg smart fans
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # Network
+  dio: ^5.4.0
+  connectivity_plus: ^5.0.2
+  
+  # Local Storage
+  shared_preferences: ^2.2.2
+  
+  # UI Components
+  flutter_spinkit: ^5.2.0
+  shimmer: ^3.0.0
+  
+  # Utilities
+  intl: ^0.19.0
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  mockito: ^5.4.4
+  build_runner: ^2.4.7
+
+flutter:
+  uses-material-design: true
