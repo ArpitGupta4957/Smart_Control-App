@@ -21,7 +21,6 @@ Beautiful, responsive Flutter app ✨ for controlling Atomberg smart fans 🌀. 
 ## Screenshots
 
 ![Device List - Grid](assets/images/device-list.png)
-![Device Control - Details](assets/images/device-control.png)
 
 
 ## Quick Start
