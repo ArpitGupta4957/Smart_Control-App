@@ -1,121 +1,112 @@
 <div align="center">
 
-# Atomberg Smart Fan Controller
+# 🌀 Atomberg Smart Fan Controller
 
-Beautiful, responsive Flutter app ✨ for controlling Atomberg smart fans 🌀. Designed to impress at a glance 👀: smooth animations 🎞️, clean gradients 🌈, and an intuitive dashboard 📊. Ships with Mock Mode out of the box 🧪, and can connect to real APIs when needed 🔗.
+A **beautiful and responsive Flutter app** for controlling Atomberg smart fans 🏠🌀
+Built for **quick demos and real-world usage** with smooth animations 🎞️, clean UI ✨, and intuitive controls 🎛️.
 
-![Flutter](https://img.shields.io/badge/Flutter-3.0%2B-02569B?logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-3.0%2B-0175C2?logo=dart&logoColor=white)
+![Flutter](https://img.shields.io/badge/Flutter-3.0%2B-02569B?logo=flutter\&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.0%2B-0175C2?logo=dart\&logoColor=white)
 ![Platforms](https://img.shields.io/badge/Platforms-Android%20|%20iOS%20|%20Web-6A5ACD)
 
 </div>
 
-## Highlights
+---
 
-- Elegant dashboard with animated fan cards and status chips
-- One-tap controls: power, speed, breeze, and light
-- Mock Mode ready by default — no backend required to demo
-- Dark mode, Material 3 theming, subtle gradients and motion
-- Clean architecture (domain/data/presentation) with Provider
+## ✨ Highlights
 
-## Screenshots
+* Elegant dashboard with animated fan cards 🧩 and status chips
+* One-tap controls: power ⚡, speed 🎚️, breeze 🌬️, and light 💡
+* Mock Mode enabled by default 🧪 — demo-ready without backend
+* Material 3 theming 🎨 with dark mode 🌙
+* Clean architecture using Provider 🧠
 
-![Device List - Grid](assets/images/device-list.png)
-![Device Control - Details](assets/images/device-control.png)
+---
 
+## 📸 Screenshots
 
-## Quick Start
+| Device List 🗂️                               | Device Control 🎛️                                  |
+| --------------------------------------------- | --------------------------------------------------- |
+| ![Device List](assets/images/device-list.png) | ![Device Control](assets/images/device-control.png) |
 
-1) Install dependencies
+---
+
+## 🚀 Quick Start
+
+Install dependencies 📦:
 
 ```bash
 flutter pub get
 ```
 
-2) Run (Mock Mode)
+Run in **Mock Mode** 🧪:
 
 ```bash
-# Web
+# Web 🌐
 flutter run -d chrome
 
-<p align="center">
-	<img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" />
-	<img src="https://img.shields.io/badge/App-Atomberg%20Smart%20Fan%20Controller-6A5ACD?style=for-the-badge" />
-	<img src="https://img.shields.io/badge/UI-Material%203-02569B?style=for-the-badge" />
-	<img src="https://img.shields.io/badge/Language-Dart%20|%20Flutter-0175C2?style=for-the-badge" />
-	<img src="https://img.shields.io/badge/Platforms-Android%20|%20iOS%20|%20Web-orange?style=for-the-badge" />
-</p>
-
-<p align="center">
-	<b>Control Atomberg smart fans with style — animated dashboards, smooth gradients, and one-tap actions. Mock Mode works out of the box; real API is a flip away.</b>
-</p>
+# Android / iOS 📱
+flutter run
+```
 
 ---
 
-## 🚀 What is this project?
+## 📌 What is this project?
 
-This is a production-quality Flutter app focused on:
+A **production-quality Flutter app** focused on:
 
-* Beautiful, responsive UI that feels premium
-* Practical controls: power, speed, breeze, light
-* Real-world patterns: clean architecture, providers, services
-* Works offline in Mock Mode; can switch to live APIs fast
+* Polished, responsive UI ✨
+* Practical fan controls 🌀 (power, speed, breeze, light)
+* Real-world architecture patterns 🏗️
+* Mock-first approach with easy API switch 🔄
 
 ---
 
-## ✨ Key Features
+## 🔑 Key Features
 
 ✅ Animated device grid with status chips
-✅ One-tap power, speed, breeze, and light controls
-✅ Mock Mode (no backend required) for instant demos
-✅ Material 3 theming, dark mode, tasteful gradients
-✅ Clean architecture with domain/data/presentation layers
+✅ One-tap fan controls ⚡
+✅ Mock Mode for instant demos 🧪
+✅ Material 3 design with dark mode 🌙
+✅ Clean domain–data–presentation architecture 🧩
 
 ---
 
-## 🧠 UI & Flow (Visual Overview)
+## 🧭 App Flow
 
 ```
-Splash → Login → Device List (Grid) → Device Control (Actions)
+Splash → Login → Device List (Grid) → Device Control
 ```
 
-Each screen is optimized for clarity, motion, and quick interaction.
+Simple, fast, and interaction-focused ⚡
 
 ---
 
-## 🔄 Mock Mode → Real API (Step-by-Step)
+## 🔄 Mock Mode → Real API
 
-Start in Mock Mode, then enable live data when ready:
+Switching to live APIs is straightforward 🔌:
 
 ```
 device_list_screen.dart
-	• initState(): uncomment provider fetch/startAutoRefresh
-	• _onRefresh(): uncomment provider fetch
+• Uncomment provider fetch calls in initState()
+• Enable refresh logic
 
 device_control_screen.dart
-	• Uncomment provider control calls (power/speed/light/breeze)
+• Uncomment control API calls (power / speed / light / breeze)
 
 api_constants.dart
-	• Adjust base URL or headers if needed
+• Update base URL and headers
 ```
 
 ---
 
 ## ⚙️ Tech Stack
 
-<p align="left">
-	<img src="https://img.shields.io/badge/Flutter-App-blue" />
-	<img src="https://img.shields.io/badge/Provider-State%20Mgmt-green" />
-	<img src="https://img.shields.io/badge/Dio-Network-red" />
-	<img src="https://img.shields.io/badge/Shared%20Prefs-Storage-lightgrey" />
-	<img src="https://img.shields.io/badge/Shimmer-Loading-ffcc00" />
-</p>
-
-* Flutter + Dart (Material 3)
-* Provider for state
-* Dio for networking
-* Shared Preferences for local storage
-* Shimmer & custom animations for polish
+* Flutter & Dart (Material 3) 🐦
+* Provider (state management) 🧠
+* Dio (networking) 🌐
+* Shared Preferences (local storage) 💾
+* Shimmer & custom animations ✨
 
 ---
 
@@ -123,62 +114,24 @@ api_constants.dart
 
 ```
 lib/
-	core/         theme, constants, network utils
-	domain/       entities, repos, usecases
-	data/         services, repositories, models
-	presentation/ screens, widgets, providers, animations
+ core/           theme, constants, network utils
+ domain/         entities, repositories, use cases
+ data/           models, services, repositories
+ presentation/   screens, widgets, providers, animations
 ```
-
----
-
-## ▶️ Quick Start
-
-```bash
-flutter pub get
-```
-
-Run in Mock Mode:
-
-```bash
-# Web
-flutter run -d chrome
-
-# Android/iOS
-flutter run
-```
-
-Run tests (optional):
-
-```bash
-flutter test
-```
-
----
-
-## 🏗️ Why This Stands Out
-
-✔️ Designed to impress quickly (animations, gradients, clean layout)
-✔️ Real architecture, not throwaway code
-✔️ Mock-first for instant demos; API-ready by design
-✔️ Minimal friction to onboard and showcase
 
 ---
 
 ## 🧪 Future Enhancements
 
-* Connect real fan images in `assets/images`
-* Auto-refresh dashboard metrics with provider
-* Device grouping, rooms, favorites
-* Web build optimizations
+* Real device images 🖼️
+* Auto-refresh dashboard 🔄
+* Room-wise grouping 🏠
+* Web build optimizations 🌐
 
 ---
 
 ## 🤝 Connect
 
-Interested in:
-
-* Flutter UI/UX ✨
-* Clean architecture 🧩
-* Building polished demos 🚀
-
-Contributions and ideas are welcome — star the repo if you like the approach!
+Interested in **Flutter UI/UX ✨**, **clean architecture 🧩**, or **polished demo apps 🚀**?
+Contributions and feedback are welcome ⭐
