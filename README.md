@@ -2,7 +2,7 @@
 
 # Atomberg Smart Fan Controller
 
-Beautiful, responsive Flutter app for controlling Atomberg smart fans. Designed to impress at a glance: smooth animations, clean gradients, and an intuitive dashboard. Ships with Mock Mode out of the box, and can connect to real APIs when needed.
+Beautiful, responsive Flutter app ✨ for controlling Atomberg smart fans 🌀. Designed to impress at a glance 👀: smooth animations 🎞️, clean gradients 🌈, and an intuitive dashboard 📊. Ships with Mock Mode out of the box 🧪, and can connect to real APIs when needed 🔗.
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.0%2B-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3.0%2B-0175C2?logo=dart&logoColor=white)
@@ -20,10 +20,8 @@ Beautiful, responsive Flutter app for controlling Atomberg smart fans. Designed 
 
 ## Screenshots
 
-Add your screenshots here (optional) for extra polish:
-
-![Device List - Grid](assets/images/screenshots/device-list.png)
-![Device Control - Details](assets/images/screenshots/device-control.png)
+![Device List - Grid](assets/images/device-list.png)
+![Device Control - Details](assets/images/device-control.png)
 
 
 ## Quick Start
@@ -130,17 +128,6 @@ lib/
 	data/         services, repositories, models
 	presentation/ screens, widgets, providers, animations
 ```
-
----
-
-## 🖼️ Screenshots
-
-Keep these for visual impact:
-
-![Device List - Grid](assets/images/screenshots/device-list.png)
-![Device Control - Details](assets/images/screenshots/device-control.png)
-
-> Tip: Use device frames or clean crops (1440×900) for best results.
 
 ---
 
