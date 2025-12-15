@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import '../../core/utils/validators.dart';
-import '../providers/auth_provider.dart';
 import 'device_list_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,203 +15,186 @@ class _LoginScreenState extends State<LoginScreen> {
   final _apiKeyController = TextEditingController();
   final _refreshTokenController = TextEditingController();
   bool _obscureRefreshToken = true;
-  
+
   @override
   void dispose() {
     _apiKeyController.dispose();
     _refreshTokenController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _login() async {
-    if (_formKey.currentState!.validate()) {
-      final authProvider = context.read<AuthProvider>();
-      final success = await authProvider.login(
-        _apiKeyController.text.trim(),
-        _refreshTokenController.text.trim(),
-      );
-      
-      if (success && mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const DeviceListScreen()),
-        );
-      }
-    }
+    if (_formKey.currentState?.validate() != true) return;
+    // Skip authentication; just navigate when user clicks Login
+    if (_formKey.currentState?.validate() != true) return;
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const DeviceListScreen()),
+    );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Icon(
-                    Icons.air,
-                    size: 80,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Atomberg Fan Controller',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Enter your credentials to continue',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 48),
-                  
-                  // API Key Field
-                  TextFormField(
-                    controller: _apiKeyController,
-                    decoration: const InputDecoration(
-                      labelText: 'API Key',
-                      hintText: 'Enter your API key',
-                      prefixIcon: Icon(Icons.key),
-                    ),
-                    validator: Validators.validateApiKey,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  // Refresh Token Field
-                  TextFormField(
-                    controller: _refreshTokenController,
-                    decoration: InputDecoration(
-                      labelText: 'Refresh Token',
-                      hintText: 'Enter your refresh token',
-                      prefixIcon: const Icon(Icons.vpn_key),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureRefreshToken 
-                              ? Icons.visibility_off 
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureRefreshToken = !_obscureRefreshToken;
-                          });
-                        },
-                      ),
-                    ),
-                    obscureText: _obscureRefreshToken,
-                    validator: Validators.validateRefreshToken,
-                    textInputAction: TextInputAction.done,
-                    onFieldSubmitted: (_) => _login(),
-                  ),
-                  const SizedBox(height: 32),
-                  
-                  // Login Button
-                  Consumer<AuthProvider>(
-                    builder: (context, authProvider, _) {
-                      if (authProvider.isLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      
-                      return ElevatedButton(
-                        onPressed: _login,
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  // Error Message
-                  Consumer<AuthProvider>(
-                    builder: (context, authProvider, _) {
-                      if (authProvider.errorMessage != null) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Card(
-                            color: Theme.of(context).colorScheme.errorContainer,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.error_outline,
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      authProvider.errorMessage!,
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.error,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Info Card
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'How to get credentials',
-                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            '1. Open Atomberg Home App\n'
-                            '2. Go to Settings\n'
-                            '3. Enable Developer Options\n'
-                            '4. Copy API Key and Refresh Token',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+        body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                  Theme.of(context).colorScheme.surface,
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
+            child: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 28.0),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const SizedBox(height: 8),
+                              CircleAvatar(
+                                radius: 36,
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.12),
+                                child: Icon(
+                                  Icons.air,
+                                  size: 40,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Atomberg Fan Controller',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Enter your credentials to continue',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 24),
+
+                              // API Key Field
+                              TextFormField(
+                                controller: _apiKeyController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  labelText: 'API Key',
+                                  hintText: 'Enter your API key',
+                                  prefixIcon: const Icon(Icons.key),
+                                  suffixIcon: Tooltip(
+                                    message: 'Paste from clipboard',
+                                    child: IconButton(
+                                      icon: const Icon(Icons.paste),
+                                      onPressed: () async {
+                                        final data = await Clipboard.getData(
+                                            Clipboard.kTextPlain);
+                                        final text = data?.text ?? '';
+                                        if (text.isNotEmpty) {
+                                          _apiKeyController.text = text.trim();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                validator: Validators.validateApiKey,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Refresh Token Field
+                              TextFormField(
+                                controller: _refreshTokenController,
+                                decoration: InputDecoration(
+                                  labelText: 'Refresh Token',
+                                  hintText: 'Enter your refresh token',
+                                  prefixIcon: const Icon(Icons.vpn_key),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          _obscureRefreshToken
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
+                                        ),
+                                        tooltip: _obscureRefreshToken
+                                            ? 'Show'
+                                            : 'Hide',
+                                        onPressed: () {
+                                          setState(() {
+                                            _obscureRefreshToken =
+                                                !_obscureRefreshToken;
+                                          });
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.paste),
+                                        tooltip: 'Paste from clipboard',
+                                        onPressed: () async {
+                                          final data = await Clipboard.getData(
+                                              Clipboard.kTextPlain);
+                                          final text = data?.text ?? '';
+                                          if (text.isNotEmpty) {
+                                            _refreshTokenController.text =
+                                                text.trim();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                obscureText: _obscureRefreshToken,
+                                validator: Validators.validateRefreshToken,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (_) => _login(),
+                              ),
+                              const SizedBox(height: 20),
+
+                              // Login Button (no auth, direct navigate)
+                              SizedBox(
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: _login,
+                                  child: const Text('Login'),
+                                ),
+                              ),
+
+                              // No error block when bypassing auth
+                              const SizedBox.shrink(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )));
   }
 }

@@ -10,7 +10,7 @@ import '../widgets/control_toggle.dart';
 
 class DeviceControlScreen extends StatefulWidget {
   final DeviceEntity device;
-  
+
   const DeviceControlScreen({super.key, required this.device});
 
   @override
@@ -20,19 +20,22 @@ class DeviceControlScreen extends StatefulWidget {
 class _DeviceControlScreenState extends State<DeviceControlScreen> {
   Timer? _refreshTimer;
   bool _isControlling = false;
-  
+  late DeviceEntity _currentDevice;
+
   @override
   void initState() {
     super.initState();
-    _startAutoRefresh();
+    _currentDevice = widget.device;
+    // Commenting out auto-refresh for mock data mode
+    // _startAutoRefresh();
   }
-  
+
   @override
   void dispose() {
     _refreshTimer?.cancel();
     super.dispose();
   }
-  
+
   void _startAutoRefresh() {
     _refreshTimer = Timer.periodic(AppConstants.refreshInterval, (_) {
       if (!_isControlling) {
@@ -40,67 +43,99 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       }
     });
   }
-  
+
+  // Mock control methods - update local state only
   Future<void> _togglePower(bool value) async {
-    setState(() => _isControlling = true);
-    
-    final success = await context.read<DeviceProvider>().togglePower(
-      widget.device.id,
-      value,
-    );
-    
+    setState(() {
+      _isControlling = true;
+      _currentDevice = _currentDevice.copyWith(
+        isPowerOn: value,
+        speed:
+            value ? (_currentDevice.speed == 0 ? 3 : _currentDevice.speed) : 0,
+      );
+    });
+
+    // Simulate API delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
     setState(() => _isControlling = false);
-    
-    if (!success && mounted) {
-      _showErrorSnackbar('Failed to toggle power');
-    }
+
+    // Uncomment when using real API:
+    // final success = await context.read<DeviceProvider>().togglePower(
+    //   widget.device.id,
+    //   value,
+    // );
+    // if (!success && mounted) {
+    //   _showErrorSnackbar('Failed to toggle power');
+    // }
   }
-  
+
   Future<void> _setSpeed(int value) async {
-    setState(() => _isControlling = true);
-    
-    final success = await context.read<DeviceProvider>().setSpeed(
-      widget.device.id,
-      value,
-    );
-    
+    setState(() {
+      _isControlling = true;
+      _currentDevice = _currentDevice.copyWith(
+        speed: value,
+        isPowerOn: value > 0,
+      );
+    });
+
+    // Simulate API delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
     setState(() => _isControlling = false);
-    
-    if (!success && mounted) {
-      _showErrorSnackbar('Failed to set speed');
-    }
+
+    // Uncomment when using real API:
+    // final success = await context.read<DeviceProvider>().setSpeed(
+    //   widget.device.id,
+    //   value,
+    // );
+    // if (!success && mounted) {
+    //   _showErrorSnackbar('Failed to set speed');
+    // }
   }
-  
+
   Future<void> _toggleLight(bool value) async {
-    setState(() => _isControlling = true);
-    
-    final success = await context.read<DeviceProvider>().toggleLight(
-      widget.device.id,
-      value,
-    );
-    
+    setState(() {
+      _isControlling = true;
+      _currentDevice = _currentDevice.copyWith(isLightOn: value);
+    });
+
+    // Simulate API delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
     setState(() => _isControlling = false);
-    
-    if (!success && mounted) {
-      _showErrorSnackbar('Failed to toggle light');
-    }
+
+    // Uncomment when using real API:
+    // final success = await context.read<DeviceProvider>().toggleLight(
+    //   widget.device.id,
+    //   value,
+    // );
+    // if (!success && mounted) {
+    //   _showErrorSnackbar('Failed to toggle light');
+    // }
   }
-  
+
   Future<void> _toggleBreeze(bool value) async {
-    setState(() => _isControlling = true);
-    
-    final success = await context.read<DeviceProvider>().toggleBreeze(
-      widget.device.id,
-      value,
-    );
-    
+    setState(() {
+      _isControlling = true;
+      _currentDevice = _currentDevice.copyWith(isBreezeMode: value);
+    });
+
+    // Simulate API delay
+    await Future.delayed(const Duration(milliseconds: 300));
+
     setState(() => _isControlling = false);
-    
-    if (!success && mounted) {
-      _showErrorSnackbar('Failed to toggle breeze mode');
-    }
+
+    // Uncomment when using real API:
+    // final success = await context.read<DeviceProvider>().toggleBreeze(
+    //   widget.device.id,
+    //   value,
+    // );
+    // if (!success && mounted) {
+    //   _showErrorSnackbar('Failed to toggle breeze mode');
+    // }
   }
-  
+
   void _showErrorSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -109,12 +144,12 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.device.name),
+        title: Text(_currentDevice.name),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -125,7 +160,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: widget.device.isOnline 
+                  color: _currentDevice.isOnline
                       ? Colors.green.withOpacity(0.2)
                       : Colors.grey.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
@@ -137,20 +172,20 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: widget.device.isOnline 
-                            ? Colors.green 
+                        color: _currentDevice.isOnline
+                            ? Colors.green
                             : Colors.grey,
                         shape: BoxShape.circle,
                       ),
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      widget.device.isOnline ? 'Online' : 'Offline',
+                      _currentDevice.isOnline ? 'Online' : 'Offline',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: widget.device.isOnline 
-                            ? Colors.green 
+                        color: _currentDevice.isOnline
+                            ? Colors.green
                             : Colors.grey,
                       ),
                     ),
@@ -161,171 +196,163 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
           ),
         ],
       ),
-      body: Consumer<DeviceProvider>(
-        builder: (context, deviceProvider, _) {
-          final currentDevice = deviceProvider.devices
-              .firstWhere((d) => d.id == widget.device.id, orElse: () => widget.device);
-          
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Fan Animation
-                FanAnimation(
-                  isSpinning: currentDevice.isPowerOn,
-                  speed: currentDevice.speed,
-                ),
-                
-                const SizedBox(height: 48),
-                
-                // Power Control
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.power_settings_new,
-                                  color: currentDevice.isPowerOn 
-                                      ? Theme.of(context).colorScheme.primary 
-                                      : Colors.grey,
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  'Power',
-                                  style: Theme.of(context).textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
-                            Switch(
-                              value: currentDevice.isPowerOn,
-                              onChanged: currentDevice.isOnline 
-                                  ? _togglePower 
-                                  : null,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Speed Control
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Fan Animation
+            FanAnimation(
+              isSpinning: _currentDevice.isPowerOn,
+              speed: _currentDevice.speed,
+            ),
+
+            const SizedBox(height: 48),
+
+            // Power Control
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.speed),
+                            Icon(
+                              Icons.power_settings_new,
+                              color: _currentDevice.isPowerOn
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Colors.grey,
+                            ),
                             const SizedBox(width: 12),
                             Text(
-                              'Speed',
+                              'Power',
                               style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                '${currentDevice.speed}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        SpeedSlider(
-                          value: currentDevice.speed,
-                          onChanged: currentDevice.isOnline && currentDevice.isPowerOn 
-                              ? (value) => _setSpeed(value.round())
-                              : null,
+                        Switch(
+                          value: _currentDevice.isPowerOn,
+                          onChanged:
+                              _currentDevice.isOnline ? _togglePower : null,
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-                
-                const SizedBox(height: 16),
-                
-                // Light Control
-                ControlToggle(
-                  icon: Icons.light_mode,
-                  title: 'Light',
-                  value: currentDevice.isLightOn,
-                  onChanged: currentDevice.isOnline 
-                      ? _toggleLight 
-                      : null,
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Breeze Mode Control
-                ControlToggle(
-                  icon: Icons.air,
-                  title: 'Breeze Mode',
-                  subtitle: 'Natural wind simulation',
-                  value: currentDevice.isBreezeMode,
-                  onChanged: currentDevice.isOnline && currentDevice.isPowerOn 
-                      ? _toggleBreeze 
-                      : null,
-                ),
-                
-                const SizedBox(height: 24),
-                
-                // Device Info Card
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Speed Control
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
+                        const Icon(Icons.speed),
+                        const SizedBox(width: 12),
                         Text(
-                          'Device Information',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                          'Speed',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${_currentDevice.speed}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        _buildInfoRow('Device ID', currentDevice.id),
-                        _buildInfoRow('Type', currentDevice.type.toUpperCase()),
-                        _buildInfoRow(
-                          'Last Updated',
-                          currentDevice.lastUpdated != null 
-                              ? _formatDateTime(currentDevice.lastUpdated!)
-                              : 'N/A',
-                        ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    SpeedSlider(
+                      value: _currentDevice.speed,
+                      onChanged:
+                          _currentDevice.isOnline && _currentDevice.isPowerOn
+                              ? (value) => _setSpeed(value.round())
+                              : null,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          );
-        },
+
+            const SizedBox(height: 16),
+
+            // Light Control
+            ControlToggle(
+              icon: Icons.light_mode,
+              title: 'Light',
+              value: _currentDevice.isLightOn,
+              onChanged: _currentDevice.isOnline ? _toggleLight : null,
+            ),
+
+            const SizedBox(height: 16),
+
+            // Breeze Mode Control
+            ControlToggle(
+              icon: Icons.air,
+              title: 'Breeze Mode',
+              subtitle: 'Natural wind simulation',
+              value: _currentDevice.isBreezeMode,
+              onChanged: _currentDevice.isOnline && _currentDevice.isPowerOn
+                  ? _toggleBreeze
+                  : null,
+            ),
+
+            const SizedBox(height: 24),
+
+            // Device Info Card
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Device Information',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoRow('Device ID', _currentDevice.id),
+                    _buildInfoRow('Type', _currentDevice.type.toUpperCase()),
+                    _buildInfoRow(
+                      'Last Updated',
+                      _currentDevice.lastUpdated != null
+                          ? _formatDateTime(_currentDevice.lastUpdated!)
+                          : 'N/A',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-  
+
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -350,11 +377,11 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       ),
     );
   }
-  
+
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inSeconds < 60) {
       return 'Just now';
     } else if (difference.inMinutes < 60) {

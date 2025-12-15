@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SpeedSlider extends StatelessWidget {
   final int value;
   final ValueChanged<double>? onChanged;
-  
+
   const SpeedSlider({
     super.key,
     required this.value,
@@ -12,10 +12,13 @@ class SpeedSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Clamp value to be at least 1 for the slider (0 means off)
+    final sliderValue = value == 0 ? 1.0 : value.toDouble();
+
     return Column(
       children: [
         Slider(
-          value: value.toDouble(),
+          value: sliderValue,
           min: 1,
           max: 5,
           divisions: 4,
@@ -32,11 +35,10 @@ class SpeedSlider extends StatelessWidget {
                 speed.toString(),
                 style: TextStyle(
                   fontSize: 12,
-                  fontWeight: speed == value 
-                      ? FontWeight.bold 
-                      : FontWeight.normal,
-                  color: speed == value 
-                      ? Theme.of(context).colorScheme.primary 
+                  fontWeight:
+                      speed == value ? FontWeight.bold : FontWeight.normal,
+                  color: speed == value
+                      ? Theme.of(context).colorScheme.primary
                       : Colors.grey,
                 ),
               );
