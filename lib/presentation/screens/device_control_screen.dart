@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/constants/app_constants.dart';
 import '../../domain/entities/device_entity.dart';
-import '../providers/device_provider.dart';
 import '../widgets/fan_animation.dart';
 import '../widgets/speed_slider.dart';
 import '../widgets/control_toggle.dart';
@@ -19,7 +16,6 @@ class DeviceControlScreen extends StatefulWidget {
 
 class _DeviceControlScreenState extends State<DeviceControlScreen> {
   Timer? _refreshTimer;
-  bool _isControlling = false;
   late DeviceEntity _currentDevice;
 
   @override
@@ -36,18 +32,9 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
     super.dispose();
   }
 
-  void _startAutoRefresh() {
-    _refreshTimer = Timer.periodic(AppConstants.refreshInterval, (_) {
-      if (!_isControlling) {
-        context.read<DeviceProvider>().fetchDevice(widget.device.id);
-      }
-    });
-  }
-
   // Mock control methods - update local state only
   Future<void> _togglePower(bool value) async {
     setState(() {
-      _isControlling = true;
       _currentDevice = _currentDevice.copyWith(
         isPowerOn: value,
         speed:
@@ -57,8 +44,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
     // Simulate API delay
     await Future.delayed(const Duration(milliseconds: 300));
-
-    setState(() => _isControlling = false);
 
     // Uncomment when using real API:
     // final success = await context.read<DeviceProvider>().togglePower(
@@ -72,7 +57,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
   Future<void> _setSpeed(int value) async {
     setState(() {
-      _isControlling = true;
       _currentDevice = _currentDevice.copyWith(
         speed: value,
         isPowerOn: value > 0,
@@ -81,8 +65,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
     // Simulate API delay
     await Future.delayed(const Duration(milliseconds: 300));
-
-    setState(() => _isControlling = false);
 
     // Uncomment when using real API:
     // final success = await context.read<DeviceProvider>().setSpeed(
@@ -96,14 +78,11 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
   Future<void> _toggleLight(bool value) async {
     setState(() {
-      _isControlling = true;
       _currentDevice = _currentDevice.copyWith(isLightOn: value);
     });
 
     // Simulate API delay
     await Future.delayed(const Duration(milliseconds: 300));
-
-    setState(() => _isControlling = false);
 
     // Uncomment when using real API:
     // final success = await context.read<DeviceProvider>().toggleLight(
@@ -117,14 +96,11 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
   Future<void> _toggleBreeze(bool value) async {
     setState(() {
-      _isControlling = true;
       _currentDevice = _currentDevice.copyWith(isBreezeMode: value);
     });
 
     // Simulate API delay
     await Future.delayed(const Duration(milliseconds: 300));
-
-    setState(() => _isControlling = false);
 
     // Uncomment when using real API:
     // final success = await context.read<DeviceProvider>().toggleBreeze(
@@ -134,15 +110,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
     // if (!success && mounted) {
     //   _showErrorSnackbar('Failed to toggle breeze mode');
     // }
-  }
-
-  void _showErrorSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
   }
 
   @override
